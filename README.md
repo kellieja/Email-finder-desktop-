@@ -10,6 +10,25 @@ CSV to process a whole list at once.
 
 ---
 
+## ⬇️ Download & run (no install, no Python)
+
+You don't need to install anything — GitHub builds a ready-to-run app for you:
+
+1. Go to the **[Actions tab](../../actions)** and click the most recent
+   **"Build double-click app"** run (green check ✓).
+2. Scroll to **Artifacts** at the bottom and download the one for your computer:
+   **EmailFinder-Windows**, **EmailFinder-macOS**, or **EmailFinder-Linux**.
+3. Unzip it and **double-click** the app:
+   - **Windows** → `EmailFinder.exe`
+   - **macOS** → `EmailFinder.app` (first time: right-click → **Open** to get past
+     the "unidentified developer" warning)
+   - **Linux** → `EmailFinder` (you may need: `chmod +x EmailFinder`, then run it)
+
+That's the whole thing — no setup, no commands. (The steps below are only if you'd
+rather run it from source.)
+
+---
+
 ## ✨ Features
 
 - **One-click desktop GUI** — nothing to configure, runs on Windows, macOS, Linux.

@@ -1,0 +1,79 @@
+name: Build double-click app
+
+# Builds a ready-to-run EmailFinder app for Windows, macOS, and Linux.
+# Runs automatically on every push to main, and can be started by hand from the
+# Actions tab (the "Run workflow" button). The finished apps appear as
+# downloadable "Artifacts" at the bottom of each run.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build for ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            label: Windows
+            artifact: EmailFinder-Windows
+          - os: macos-latest
+            label: macOS
+            artifact: EmailFinder-macOS
+          - os: ubuntu-latest
+            label: Linux
+            artifact: EmailFinder-Linux
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Run tests
+        run: python -m unittest discover -s tests
+
+      - name: Build the one-file app
+        run: pyinstaller --onefile --windowed --name EmailFinder run.py
+
+      - name: Package the result
+        shell: bash
+        run: |
+          mkdir -p out
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            cp dist/EmailFinder.exe out/
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            # The double-clickable Mac app is the .app bundle.
+            cp -R dist/EmailFinder.app out/ 2>/dev/null || cp dist/EmailFinder out/EmailFinder
+          else
+            cp dist/EmailFinder out/EmailFinder
+          fi
+          cp README.md out/ 2>/dev/null || true
+
+      - name: Upload the downloadable app
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: out/
+
+      - name: Attach to a Release (only for version tags)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
