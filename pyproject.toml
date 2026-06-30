@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "emailfinder-desktop"
+version = "1.0.0"
+description = "Find & verify business email addresses with a desktop GUI and CSV bulk upload. No SMTP, no API keys."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "EmailFinder Desktop" }]
+keywords = ["email", "email-finder", "lead-generation", "verification", "gui"]
+dependencies = ["dnspython>=2.4"]
+
+[project.urls]
+Homepage = "https://github.com/kellieja/email-finder-desktop-"
+
+[project.scripts]
+emailfinder = "emailfinder.cli:main"
+emailfinder-gui = "gui.app:main"
+
+[tool.setuptools]
+packages = ["emailfinder", "gui"]

@@ -1,0 +1,3 @@
+# Optional but recommended: enables MX-record validation for better accuracy.
+# The app still runs without it (DNS checks are simply skipped).
+dnspython>=2.4
