@@ -116,6 +116,24 @@ class TestBulk(unittest.TestCase):
     def test_detect_columns_fallback(self):
         self.assertEqual(detect_columns(["col1", "col2"]), (0, 1))
 
+    def test_detect_columns_by_content_when_swapped(self):
+        # Website in column 0, person in column 1, unhelpful headers.
+        header = ["col_a", "col_b"]
+        samples = [
+            ["https://www.dolmanlaw.com", "matthew dolman"],
+            ["https://texaslegalgroup.com", "alexander begum"],
+            ["https://waynewright.com", "wayne wright"],
+        ]
+        name_idx, domain_idx = detect_columns(header, samples)
+        self.assertEqual(domain_idx, 0)   # the website column
+        self.assertEqual(name_idx, 1)     # the person column
+
+    def test_detect_columns_content_overrides_order(self):
+        header = ["website", "owner"]
+        samples = [["acme.com", "john smith"], ["beta.org", "jane doe"]]
+        name_idx, domain_idx = detect_columns(header, samples)
+        self.assertEqual((name_idx, domain_idx), (1, 0))
+
     def test_read_and_write_roundtrip(self):
         tmpdir = tempfile.mkdtemp()
         in_path = os.path.join(tmpdir, "in.csv")

@@ -136,15 +136,17 @@ class EmailFinderApp(ctk.CTk):
         # Options row.
         opts = ctk.CTkFrame(header, fg_color="transparent")
         opts.pack(fill="x")
-        self.deep_verify = tk.BooleanVar(value=True)
-        self.scrape_site = tk.BooleanVar(value=True)
+        # Default OFF: fast, instant results. Turning these on adds slow
+        # per-row internet lookups (only worth it for small lists).
+        self.deep_verify = tk.BooleanVar(value=False)
+        self.scrape_site = tk.BooleanVar(value=False)
         ctk.CTkSwitch(
-            opts, text="Deep verify (Gravatar + GitHub)",
+            opts, text="Deep verify (Gravatar + GitHub) — slower",
             variable=self.deep_verify, progress_color=ACCENT,
             font=ctk.CTkFont(family=FONT, size=12),
         ).pack(side="left")
         ctk.CTkSwitch(
-            opts, text="Scrape company website",
+            opts, text="Scrape company website — slower",
             variable=self.scrape_site, progress_color=ACCENT,
             font=ctk.CTkFont(family=FONT, size=12),
         ).pack(side="left", padx=(20, 0))
@@ -415,9 +417,13 @@ class EmailFinderApp(ctk.CTk):
             self._events.put(("bulk_row", done, total, result))
 
         def worker():
-            process(inputs, finder, progress=progress,
-                    should_stop=self._stop_flag.is_set)
-            self._events.put(("bulk_done",))
+            try:
+                process(inputs, finder, progress=progress,
+                        should_stop=self._stop_flag.is_set)
+            except Exception as exc:
+                self._events.put(("bulk_error", str(exc)))
+            finally:
+                self._events.put(("bulk_done",))
 
         self._bulk_thread = threading.Thread(target=worker, daemon=True)
         self._bulk_thread.start()
@@ -473,6 +479,9 @@ class EmailFinderApp(ctk.CTk):
                     self.bulk_progress.set(done / total if total else 0)
                     self.bulk_status.configure(text=f"Processing {done}/{total}…")
                     self._append_bulk_row(result)
+                elif kind == "bulk_error":
+                    messagebox.showerror(
+                        APP_TITLE, f"Something went wrong during the run:\n{event[1]}")
                 elif kind == "bulk_done":
                     self._finish_bulk()
         except queue.Empty:
