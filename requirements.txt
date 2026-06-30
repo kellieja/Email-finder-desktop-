@@ -1,3 +1,6 @@
-# Optional but recommended: enables MX-record validation for better accuracy.
-# The app still runs without it (DNS checks are simply skipped).
+# Modern desktop UI toolkit (rounded, themed widgets).
+customtkinter>=5.2.2
+
+# Enables MX-record validation for better accuracy. The engine still runs
+# without it (DNS checks are simply skipped).
 dnspython>=2.4

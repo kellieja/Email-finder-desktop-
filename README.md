@@ -31,7 +31,8 @@ rather run it from source.)
 
 ## ✨ Features
 
-- **One-click desktop GUI** — nothing to configure, runs on Windows, macOS, Linux.
+- **Clean, modern desktop GUI** — rounded controls, an accent-coloured theme, and
+  confidence badges; nothing to configure, runs on Windows, macOS, Linux.
 - **Single lookup** — name + domain → best email, confidence, and all candidates.
 - **📤 Bulk CSV upload** — load a list, watch live progress, **export results** to CSV.
 - **Confidence scoring** — every guess is scored and labelled High / Medium / Low.

@@ -28,6 +28,14 @@ def main() -> None:
             "  • Fedora:           sudo dnf install python3-tkinter\n"
             "  • Windows:          reinstall Python with the 'tcl/tk' option ticked"
         )
+    try:
+        import customtkinter  # noqa: F401
+    except ModuleNotFoundError:
+        _fail(
+            "The modern UI toolkit isn't installed yet. Run:\n"
+            "  pip install -r requirements.txt\n"
+            "(or: pip install customtkinter)"
+        )
     from gui import main as run_gui
     run_gui()
 

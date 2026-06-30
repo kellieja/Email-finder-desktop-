@@ -50,7 +50,10 @@ jobs:
         run: python -m unittest discover -s tests
 
       - name: Build the one-file app
-        run: pyinstaller --onefile --windowed --name EmailFinder run.py
+        run: >
+          pyinstaller --onefile --windowed --name EmailFinder
+          --collect-all customtkinter
+          run.py
 
       - name: Package the result
         shell: bash

@@ -13,6 +13,9 @@ authors = [{ name = "EmailFinder Desktop" }]
 keywords = ["email", "email-finder", "lead-generation", "verification", "gui"]
 dependencies = ["dnspython>=2.4"]
 
+[project.optional-dependencies]
+gui = ["customtkinter>=5.2.2"]
+
 [project.urls]
 Homepage = "https://github.com/kellieja/email-finder-desktop-"
 
